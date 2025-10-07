@@ -1,17 +1,26 @@
-# Use official OpenJDK 17 image
-FROM openjdk:17-jdk-slim
+# Stage 1: Build the JAR using Maven
+FROM maven:3.9.3-eclipse-temurin-17 AS build
 
-# Set working directory inside the container
 WORKDIR /app
 
-# Copy your Spring Boot JAR into the container
-COPY target/foodOrderApp-0.0.1-SNAPSHOT.jar app.jar
+# Copy pom.xml and source code
+COPY pom.xml .
+COPY src ./src
 
-# Expose the port your Spring Boot app runs on
+# Build the Spring Boot app
+RUN mvn clean package -DskipTests
+
+# Stage 2: Create lightweight runtime image
+FROM openjdk:17-jdk-slim
+
+WORKDIR /app
+
+# Copy JAR from build stage
+COPY --from=build /app/target/foodOrderApp-0.0.1-SNAPSHOT.jar app.jar
+
+# Expose port (Render sets PORT environment variable)
+ENV PORT=8080
 EXPOSE 8080
 
-# Use environment PORT variable if available (Render provides it)
-ENV PORT=8080
-
-# Run the Spring Boot app
-ENTRYPOINT ["java", "-jar", "target/foodOrderApp-0.0.1-SNAPSHOT.jar app.jar"]
+# Start the Spring Boot app
+ENTRYPOINT ["java", "-jar", "app.jar"]
