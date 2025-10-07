@@ -14,4 +14,4 @@ EXPOSE 8080
 ENV PORT=8080
 
 # Run the Spring Boot app
-ENTRYPOINT ["java", "-jar", "foodOrderApp-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "target/foodOrderApp-0.0.1-SNAPSHOT.jar app.jar"]
