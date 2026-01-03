@@ -49,6 +49,7 @@ public class FoodService {
         food.setImageUrl(req.getImageUrl());
         food.setPopular(req.isPopular());
         food.setNewest(req.isNewest());
+        food.setRating(req.getRating());
         food.setCategory(category);
 
         return foodRepo.save(food);
