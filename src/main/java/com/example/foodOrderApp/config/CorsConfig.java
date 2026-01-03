@@ -12,7 +12,7 @@ public class CorsConfig {
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("https://chic-froyo-a972eb.netlify.app/"); // React dev server
+        config.addAllowedOriginPattern("*"); // Allow all origins
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         config.setAllowCredentials(true);
