@@ -77,6 +77,13 @@ public class OrderController {
         return ResponseEntity.ok("Order deleted successfully");
     }
 
+    // ---------------- Cancel Order ----------------
+    @PutMapping("/{id}/cancel")
+    public ResponseEntity<String> cancelOrder(@PathVariable Long id) {
+        orderService.cancelOrder(id);
+        return ResponseEntity.ok("Order cancelled successfully");
+    }
+
 
 
 }

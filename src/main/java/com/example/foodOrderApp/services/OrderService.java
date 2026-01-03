@@ -16,6 +16,9 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import com.example.foodOrderApp.exceptions.ResourceNotFoundException;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -124,6 +127,19 @@ public class OrderService {
             order.setRazorpayOrderId(razorpayOrder.get("id"));
         }
 
+        return orderRepository.save(order);
+    }
+
+    // Cancel Order
+    public Order cancelOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + orderId));
+
+        if ("DELIVERED".equals(order.getStatus()) || "CANCELLED".equals(order.getStatus())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot cancel a finished or already cancelled order");
+        }
+
+        order.setStatus("CANCELLED");
         return orderRepository.save(order);
     }
 
